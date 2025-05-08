@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 public class AudioController {
     AudioService audioService;
 
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping
     ApiResponse<AudioResponse> create(@RequestBody @Valid AudioRequest audioRequest) {
         return ApiResponse.<AudioResponse>builder()
@@ -27,13 +30,15 @@ public class AudioController {
                 .build();
     }
 
-    @GetMapping
+    //public
+    @GetMapping()
     ApiResponse<List<AudioResponse>> getAll() {
         return ApiResponse.<List<AudioResponse>>builder()
                 .result(audioService.getAllAudios())
                 .build();
     }
 
+    @Secured({"ADMIN", "USER"})
     @GetMapping("/{id}")
     ApiResponse<AudioResponse> getAudioById(@PathVariable String id) {
         return ApiResponse.<AudioResponse>builder()
@@ -41,6 +46,7 @@ public class AudioController {
                 .build();
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @PutMapping("/{id}")
     ApiResponse<AudioResponse> updateAudioById(@PathVariable String id, @RequestBody @Valid AudioUpdateRequest request) {
         return ApiResponse.<AudioResponse>builder()
@@ -48,6 +54,7 @@ public class AudioController {
                 .build();
     }
 
+    @Secured({"ADMIN", "USER"})
     @DeleteMapping("/{id}")
     ApiResponse<String> deleteAudioById(@PathVariable String id) {
         return ApiResponse.<String>builder()

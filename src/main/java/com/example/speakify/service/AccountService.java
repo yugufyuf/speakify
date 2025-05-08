@@ -4,6 +4,7 @@ import com.example.speakify.dto.request.AccountCreateRequest;
 import com.example.speakify.dto.request.AccountUpdateRequest;
 import com.example.speakify.dto.response.AccountResponse;
 import com.example.speakify.entity.Account;
+import com.example.speakify.enums.Role;
 import com.example.speakify.exception.AppException;
 import com.example.speakify.exception.ErrorCode;
 import com.example.speakify.mapper.AccountMapper;
@@ -12,6 +13,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,17 +28,21 @@ import java.util.List;
 public class AccountService {
     AccountRepository accountRepository;
     AccountMapper accountMapper;
+
+    PasswordEncoder passwordEncoder;
 //    @Autowired
     final MailSenderService mailSenderService;
 
     public Account createAccount(AccountCreateRequest request) {
         if(accountRepository.existsByEmail(request.getEmail()))
             throw new AppException(ErrorCode.EMAIL_EXISTED);
-        Account account = accountMapper.toAccount(request);
-        //MapStruct chỉ cập nhat object trong RAM, kh lưu vào database
-        //Khi gọi accountMapper.updateAccount(account, request), dữ liệu của account sẽ được
-        // cập nhat trong bộ nhớ (RAM), nhưng chưa ghi xuống database.
-        //Spring Data JPA không tự động lưu object đã chỉnh sửa nếu bạn không gọi save().
+
+        Account account = Account.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .name(request.getName())
+                .role(Role.USER)
+                .build();
 
         mailSenderService.sendMail(request.getEmail(), "Signin Speakify", "Success");
         return accountRepository.save(account);

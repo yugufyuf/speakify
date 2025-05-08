@@ -11,6 +11,8 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +24,7 @@ import java.util.List;
 public class AccountController {
     AccountService accountService;
 
+    //public
     @PostMapping()
     ApiResponse<Account> createAccount(@RequestBody @Valid AccountCreateRequest request) throws MessagingException {
         return ApiResponse.<Account>builder()
@@ -30,12 +33,14 @@ public class AccountController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasAuthority('ADMIN')")
     ApiResponse<List<Account>> getAccounts() {
         return ApiResponse.<List<Account>>builder()
                 .result(accountService.getAccounts())
                 .build();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{accountId}")
     ApiResponse<AccountResponse> getAccount(@PathVariable String accountId) {
         return ApiResponse.<AccountResponse>builder()
@@ -43,6 +48,7 @@ public class AccountController {
                 .build();
     }
 
+    @Secured({"ADMIN", "USER"})
     @PutMapping("/{accountId}")
     ApiResponse<AccountResponse> updateAccount(@PathVariable String accountId,
                                   @RequestBody AccountUpdateRequest request) {
@@ -51,6 +57,7 @@ public class AccountController {
                 .build();
     }
 
+    @Secured({"ADMIN", "USER"})
     @DeleteMapping("/{accountId}")
     ApiResponse<String> deleteAccount(@PathVariable String accountId) {
         return ApiResponse.<String>builder()

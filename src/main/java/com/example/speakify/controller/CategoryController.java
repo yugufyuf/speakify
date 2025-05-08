@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,20 +20,23 @@ import java.util.List;
 public class CategoryController {
     CategoryService categoryService;
 
-    @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping()
     ApiResponse<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest request) {
         return ApiResponse.<CategoryResponse>builder()
                 .result(categoryService.createCategory(request))
                 .build();
     }
 
-    @GetMapping
+    //public
+    @GetMapping()
     ApiResponse<List<CategoryResponse>> getAllCategories() {
         return ApiResponse.<List<CategoryResponse>>builder()
                 .result(categoryService.getAllCategories())
                 .build();
     }
 
+    //public
     @GetMapping("/{categoryId}")
     ApiResponse<CategoryResponse> getCategoryById(@PathVariable("categoryId") String categoryId) {
         return ApiResponse.<CategoryResponse>builder()
@@ -40,6 +44,7 @@ public class CategoryController {
                 .build();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{categoryId}")
     ApiResponse<CategoryResponse> updateCategory(@PathVariable("categoryId") String categoryId,@RequestBody CategoryRequest request) {
         return ApiResponse.<CategoryResponse>builder()
@@ -47,6 +52,7 @@ public class CategoryController {
                 .build();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/main")
     ApiResponse<String> deleteMainCategory(@RequestBody @Valid CategoryRequest request) {
         return ApiResponse.<String>builder()
@@ -54,6 +60,7 @@ public class CategoryController {
                 .build();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/sub")
     ApiResponse<String> deleteSubCategory(@RequestBody @Valid CategoryRequest request) {
         return ApiResponse.<String>builder()

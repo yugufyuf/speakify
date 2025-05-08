@@ -26,3 +26,13 @@ spring:
       enabled: true
       max-file-size: 5MB
       max-request-size: 5MB
+
+jwt:
+  signerKey: "qUIO01I4tQtECy3nFMP4kI1RK27VqetVfCMf+SQJpnL+xVN9Cv1w7HCkvEPsGTVW"
+  token-valid-duration: 86400  #seconds
+  token-refreshable-duration: 864000  #seconds 10 days
+
+app-init:
+  admin-password: admin
+  admin-name: admin
+  admin-email: admin@gmail.com

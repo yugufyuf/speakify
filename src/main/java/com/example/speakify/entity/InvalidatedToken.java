@@ -1,22 +1,20 @@
 package com.example.speakify.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import com.example.speakify.enums.Role;
 
-@Data
+import java.util.Date;
+
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Account {
+public class InvalidatedToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-    String name;
-    String password;
-    String email;
-    Role role;
+    Date expiryTime;
 }

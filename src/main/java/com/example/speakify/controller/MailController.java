@@ -23,7 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MailController {
     MailSenderService mailService;
 
-    @PostMapping
+    //public
+    @PostMapping()
     ResponseEntity<String> createAccount(@RequestBody @Valid SendEmailRequest request) {
         //String content = "Dear Thu 7, 2/11/2024 Pham Huynh Anh Thu 22H1120026 25/12/2004";
         mailService.sendMail(request.getEmail(), request.getSubject(), request.getBody());
