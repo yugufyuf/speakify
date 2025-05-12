@@ -36,6 +36,14 @@ public class ConversionHistoryController {
                 .build();
     }
 
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping("/my-audio")
+    ApiResponse<List<ConversionHistoryResponse>> getMyAudio() {
+        return ApiResponse.<List<ConversionHistoryResponse>>builder()
+                .result(conversionHistoryService.getAllMyConvertedAudio())
+                .build();
+    }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     ApiResponse<List<ConversionHistoryResponse>> getAll() {

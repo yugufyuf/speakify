@@ -24,6 +24,7 @@ public class ConversionHistoryService {
     ConversionHistoryRepository repository;
     ConversionHistoryMapper mapper;
     AccountService accountService;
+    private final ConversionHistoryRepository conversionHistoryRepository;
 
     public ConversionHistoryResponse create(ConversionHistoryRequest request) {
         log.warn("convert: {}", request);
@@ -38,6 +39,13 @@ public class ConversionHistoryService {
 
     public List<ConversionHistoryResponse> findAll() {
         return mapper.toConversionHistoryResponse(repository.findAll());
+    }
+
+    public List<ConversionHistoryResponse> getAllMyConvertedAudio(){
+        Account account = accountService.getAccountFromAuthentication();
+        List<ConversionHistory> conversionHistories = conversionHistoryRepository.findAllByAccount_Id(account.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.HISTORY_NOT_EXIST));
+        return mapper.toConversionHistoryResponse(conversionHistories);
     }
 
     public List<ConversionHistoryResponse> findByAccountId(String accountId) {
