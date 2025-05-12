@@ -7,6 +7,9 @@ import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+import java.util.Set;
+
 @Data
 @Entity
 @Builder
@@ -18,5 +21,4 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String mainCategory;
-    String subCategory;
 }

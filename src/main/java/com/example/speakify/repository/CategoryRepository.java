@@ -10,10 +10,6 @@ import java.util.Optional;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, String> {
     boolean existsByMainCategory(String mainCategory);
-    boolean existsBySubCategory(String subCategory);
-    Optional<Category> findByMainCategoryAndSubCategoryIsNull(String mainCategory);
-    boolean existsByMainCategoryAndSubCategoryIsNull(String mainCategory);
     List<Category> findAllByMainCategory(String mainCategory);
-    Optional<Category> findByMainCategoryAndSubCategory(String mainCategory, String subCategory);
-    boolean existsByMainCategoryAndSubCategory(String mainCategory, String subCategory);
+    Optional<Category> findById(String id);
 }

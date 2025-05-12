@@ -59,4 +59,12 @@ public class ConversionHistoryController {
                 .result(conversionHistoryService.deleteById(id))
                 .build();
     }
+
+    @GetMapping("/total-convert-book")
+    @PreAuthorize("hasAuthority('USER')")
+    ApiResponse<Long> getTotalConverBook() {
+        return ApiResponse.<Long>builder()
+                .result(conversionHistoryService.totalConvertHistory())
+                .build();
+    }
 }

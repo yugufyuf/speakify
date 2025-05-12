@@ -27,6 +27,10 @@ public class Book {
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     Account publisher;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    Category category;
+
     @PrePersist
     protected void onCreate() {
         publishedDate = LocalDateTime.now();

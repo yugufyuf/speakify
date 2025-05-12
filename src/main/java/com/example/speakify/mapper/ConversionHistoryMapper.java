@@ -4,6 +4,7 @@ import com.example.speakify.dto.request.ConversionHistoryRequest;
 import com.example.speakify.dto.response.ConversionHistoryResponse;
 import com.example.speakify.entity.ConversionHistory;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 

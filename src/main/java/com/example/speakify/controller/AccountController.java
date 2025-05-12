@@ -40,6 +40,14 @@ public class AccountController {
                 .build();
     }
 
+    @GetMapping("/myAccount")
+    @PreAuthorize("hasAuthority('USER')")
+    ApiResponse<AccountResponse> getMyAccount() {
+        return ApiResponse.<AccountResponse>builder()
+                .result(accountService.getMyAccount())
+                .build();
+    }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{accountId}")
     ApiResponse<AccountResponse> getAccount(@PathVariable String accountId) {

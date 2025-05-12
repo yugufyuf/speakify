@@ -26,7 +26,13 @@ public class ConversionHistory {
     @JoinColumn(name = "audio_id", referencedColumnName = "id")
     Audio audio;
 
+    @Enumerated(EnumType.STRING)
     StatusConversion status;
 
     LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }

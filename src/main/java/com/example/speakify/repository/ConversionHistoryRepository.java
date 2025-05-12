@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ConversionHistoryRepository extends JpaRepository<ConversionHistory, String> {
     Optional<List<ConversionHistory>> findAllByAccount_Id(String accountId);
+    long countByAccount_Id(String accountId);
 }

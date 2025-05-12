@@ -1,6 +1,7 @@
 package com.example.speakify.dto.request;
 
 import com.example.speakify.entity.Account;
+import com.example.speakify.entity.Category;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,5 +14,7 @@ public class BookRequest {
     String title;
     String author;
     String description;
+    String voiceType;
     Account account;
+    Category category;
 }

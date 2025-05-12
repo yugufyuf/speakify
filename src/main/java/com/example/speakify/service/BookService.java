@@ -1,12 +1,17 @@
 package com.example.speakify.service;
 
+import com.example.speakify.dto.request.AudioRequest;
 import com.example.speakify.dto.request.BookRequest;
 import com.example.speakify.dto.response.BookResponse;
+import com.example.speakify.entity.Account;
 import com.example.speakify.entity.Book;
+import com.example.speakify.entity.Category;
 import com.example.speakify.exception.AppException;
 import com.example.speakify.exception.ErrorCode;
 import com.example.speakify.mapper.BookMapper;
+import com.example.speakify.mapper.CategoryMapper;
 import com.example.speakify.repository.BookRepository;
+import com.example.speakify.repository.CategoryRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,10 +28,25 @@ public class BookService {
     BookRepository bookRepository;
     BookMapper bookMapper;
     AccountService accountService;
+    CategoryRepository categoryRepository;
+    AudioService audioService;
 
-    public BookResponse uploadBook(String publisherId, BookRequest request) {
-        request.setAccount(accountService.getAccount(publisherId));
-        return bookMapper.toBookResponse(bookRepository.save(bookMapper.toBook(request)));
+    public BookResponse uploadBook(String categoryId, BookRequest request) {
+        log.warn("book request {}", request);
+        Account account = accountService.getAccount(accountService.getAccountFromAuthentication().getId());
+        request.setAccount(account);
+        Category category = categoryRepository.findById(categoryId)
+                        .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXIST));
+        request.setCategory(category);
+        Book book = bookRepository.save(bookMapper.toBook(request));
+        audioService.createAudio(AudioRequest.builder()
+                        .title(request.getTitle())
+                        .voiceType(request.getVoiceType())
+                        .categoryId(categoryId)
+                        .publisherId(account.getId())
+                        .bookId(book.getId())
+                .build());
+        return bookMapper.toBookResponse(book);
     }
 
     public BookResponse updateBook(String bookId, BookRequest request) {

@@ -29,7 +29,9 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
 
     @PostMapping
-    public ApiResponse<AuthenticationResponse> generateToken(@RequestBody @Valid AuthenticationRequest request) {
+    public ApiResponse<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request) {
+        log.warn("controller");
+        log.warn("request: {}" , request);
         return ApiResponse.<AuthenticationResponse>builder()
                 .result(authenticationService.authenticate(request))
                 .build();

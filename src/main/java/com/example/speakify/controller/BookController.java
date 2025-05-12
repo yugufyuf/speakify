@@ -21,10 +21,11 @@ public class BookController {
     BookService bookService;
 
     @PreAuthorize("hasAuthority('USER')")
-    @PostMapping("/{publisherId}")
-    ApiResponse<BookResponse> upload(@PathVariable String publisherId, @RequestBody BookRequest bookRequest) {
+    @PostMapping("/{categoryId}")
+    ApiResponse<BookResponse> upload(@PathVariable String categoryId,
+                                     @RequestBody BookRequest bookRequest) {
         return ApiResponse.<BookResponse>builder()
-                .result(bookService.uploadBook(publisherId, bookRequest))
+                .result(bookService.uploadBook(categoryId, bookRequest))
                 .build();
     }
 

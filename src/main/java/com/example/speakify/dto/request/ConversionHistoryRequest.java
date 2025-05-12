@@ -14,5 +14,5 @@ import lombok.experimental.FieldDefaults;
 public class ConversionHistoryRequest {
     Account account;
     Audio audio;
-    StatusConversion statusConversion;
+    StatusConversion status;
 }

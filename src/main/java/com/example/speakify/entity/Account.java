@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import com.example.speakify.enums.Role;
 
+import java.time.LocalDate;
+
 @Data
 @Entity
 @Builder
@@ -19,4 +21,10 @@ public class Account {
     String password;
     String email;
     Role role;
+    LocalDate registerDate;
+
+    @PrePersist
+    protected void onCreate() {
+        registerDate = LocalDate.now();
+    }
 }

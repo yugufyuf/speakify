@@ -2,6 +2,7 @@ package com.example.speakify.controller;
 
 import com.example.speakify.dto.request.CategoryRequest;
 import com.example.speakify.dto.response.ApiResponse;
+import com.example.speakify.dto.response.BookByCategoryResponse;
 import com.example.speakify.dto.response.CategoryResponse;
 import com.example.speakify.service.CategoryService;
 import jakarta.validation.Valid;
@@ -36,6 +37,13 @@ public class CategoryController {
                 .build();
     }
 
+    @GetMapping("/categories")
+    ApiResponse<List<BookByCategoryResponse>> getCategories() {
+        return ApiResponse.<List<BookByCategoryResponse>>builder()
+                .result(categoryService.getAllCategoryWithBooks())
+                .build();
+    }
+
     //public
     @GetMapping("/{categoryId}")
     ApiResponse<CategoryResponse> getCategoryById(@PathVariable("categoryId") String categoryId) {
@@ -60,11 +68,4 @@ public class CategoryController {
                 .build();
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @DeleteMapping("/sub")
-    ApiResponse<String> deleteSubCategory(@RequestBody @Valid CategoryRequest request) {
-        return ApiResponse.<String>builder()
-                .result(categoryService.deleteSubCategory(request))
-                .build();
-    }
 }

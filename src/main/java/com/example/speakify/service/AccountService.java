@@ -2,18 +2,21 @@ package com.example.speakify.service;
 
 import com.example.speakify.dto.request.AccountCreateRequest;
 import com.example.speakify.dto.request.AccountUpdateRequest;
+import com.example.speakify.dto.request.SendEmailRequest;
 import com.example.speakify.dto.response.AccountResponse;
 import com.example.speakify.entity.Account;
+import com.example.speakify.enums.EmailType;
 import com.example.speakify.enums.Role;
 import com.example.speakify.exception.AppException;
 import com.example.speakify.exception.ErrorCode;
 import com.example.speakify.mapper.AccountMapper;
 import com.example.speakify.repository.AccountRepository;
+import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +24,16 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor// = @Autowired + final
-//Tự động tạo constructor chỉ chứa các field final hoặc có annotation @NonNull.
-//Nếu có nhiều field, nó chỉ tạo constructor cho các field bắt buộc đó.
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountService {
     AccountRepository accountRepository;
     AccountMapper accountMapper;
 
     PasswordEncoder passwordEncoder;
-//    @Autowired
-    final MailSenderService mailSenderService;
+    MailService mailService;
 
-    public Account createAccount(AccountCreateRequest request) {
+    public Account createAccount(AccountCreateRequest request) throws MessagingException {
         if(accountRepository.existsByEmail(request.getEmail()))
             throw new AppException(ErrorCode.EMAIL_EXISTED);
 
@@ -44,12 +44,21 @@ public class AccountService {
                 .role(Role.USER)
                 .build();
 
-        mailSenderService.sendMail(request.getEmail(), "Signin Speakify", "Success");
+        SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
+                .emailType(EmailType.REGISTER)
+                .email(request.getEmail())
+                .build();
+        mailService.classifyBeforeSendEmail(sendEmailRequest);
+
         return accountRepository.save(account);
     }
 
     public List<Account> getAccounts() {
         return accountRepository.findAll();
+    }
+
+    public AccountResponse getMyAccount(){
+        return accountMapper.toAccountResponse(getAccountFromAuthentication());
     }
 
     public AccountResponse getAccountById(String id) {
@@ -80,5 +89,11 @@ public class AccountService {
             return "Delete failed";
         }
         return "Delete Success";
+    }
+
+    public Account getAccountFromAuthentication(){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return accountRepository.findByEmail(email).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 }

@@ -1,13 +1,14 @@
-package com.example.speakify.dto.response;
+package com.example.speakify.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryResponse {
-    String mainCategory;
+public class OTPCreationRequest {
+    String otp;
+    long expiryTime;
 }

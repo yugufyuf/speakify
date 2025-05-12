@@ -38,6 +38,7 @@ public class AudioService {
     ConversionHistoryService conversionHistoryService;
 
     public AudioResponse createAudio(AudioRequest audioRequest) {
+        log.warn("create audio: {}", audioRequest);
         Book book = bookRepository.findById(audioRequest.getBookId())
                 .orElseThrow(() -> new AppException(ErrorCode.DOC_NOT_EXIST));
         Category category = categoryRepository.findById(audioRequest.getCategoryId())
@@ -57,7 +58,7 @@ public class AudioService {
         conversionHistoryService.create(ConversionHistoryRequest.builder()
                 .audio(audio)
                 .account(account)
-                .statusConversion(StatusConversion.FINISHED)
+                .status(StatusConversion.FINISHED)
                 .build());
         return audioMapper.toAudioResponse(audio);
     }
