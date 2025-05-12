@@ -15,6 +15,7 @@ public class BookRequest {
     String author;
     String description;
     String voiceType;
+    String categoryId;
     Account account;
     Category category;
 }
