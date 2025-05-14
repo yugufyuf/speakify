@@ -53,6 +53,7 @@ public enum ErrorCode {
     HISTORY_NOT_EXIST(1048,"History does not exist", HttpStatus.NOT_FOUND),
     HISTORY_EXISTED(1049,"History already exists", HttpStatus.CONFLICT),
     ACTIVITY_LOG_NOT_FOUND(1050,"Activity log does not exist", HttpStatus.NOT_FOUND),
+    CONVERT_AUDIO_FAILED(1051,"Convert audio failed", HttpStatus.INTERNAL_SERVER_ERROR),
 
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized exception", HttpStatus.SERVICE_UNAVAILABLE),
     INVALID_KEY(8888, "Invalid key", HttpStatus.BAD_REQUEST),

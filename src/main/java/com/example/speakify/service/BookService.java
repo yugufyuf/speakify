@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -30,22 +31,28 @@ public class BookService {
     AccountService accountService;
     CategoryRepository categoryRepository;
     AudioService audioService;
+    CallApiService callApiService;
 
-    public BookResponse uploadBook(BookRequest request) {
+    public String uploadBook(MultipartFile file, BookRequest request) {
         Account account = accountService.getAccount(accountService.getAccountFromAuthentication().getId());
         request.setAccount(account);
         Category category = categoryRepository.findByMainCategory(request.getCategoryName())
                         .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXIST));
         request.setCategory(category);
         Book book = bookRepository.save(bookMapper.toBook(request));
-        audioService.createAudio(AudioRequest.builder()
-                        .title(request.getTitle())
-                        .voiceType(request.getVoiceType())
-                        .categoryId(category.getId())
-                        .publisherId(account.getId())
-                        .bookId(book.getId())
-                .build());
-        return bookMapper.toBookResponse(book);
+        String audioPath = callApiService.convertPdfToAudio(file, request.getVoiceType());
+        log.warn("audio path: {}", audioPath);
+        if(audioPath != null) {
+            audioService.createAudio(AudioRequest.builder()
+                    .title(request.getTitle())
+                    .voiceType(request.getVoiceType())
+                    .categoryId(category.getId())
+                    .publisherId(account.getId())
+                    .bookId(book.getId())
+                    .build());
+        }
+        else throw new AppException(ErrorCode.CONVERT_AUDIO_FAILED);
+        return audioPath;
     }
 
     public BookResponse updateBook(String bookId, BookRequest request) {
