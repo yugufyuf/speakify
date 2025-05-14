@@ -42,6 +42,7 @@ public class Audio {
     @PrePersist
     protected void onCreate() {
         createAt = LocalDateTime.now();
+        updateAt = LocalDateTime.now();
     }
 
     @PreUpdate

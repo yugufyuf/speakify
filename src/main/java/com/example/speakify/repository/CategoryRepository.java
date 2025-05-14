@@ -12,4 +12,5 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
     boolean existsByMainCategory(String mainCategory);
     List<Category> findAllByMainCategory(String mainCategory);
     Optional<Category> findById(String id);
+    Optional<Category> findByMainCategory(String mainCategory);
 }

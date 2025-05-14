@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface BookRepository extends JpaRepository<Book, String> {
     Optional<BookResponse> findByCategory_MainCategory(String category);
     List<BookResponse> findAllByCategory_Id(String categoryId);
+    int countByPublisher_Id(String publisherId);
 }

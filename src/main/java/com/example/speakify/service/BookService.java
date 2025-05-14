@@ -32,10 +32,9 @@ public class BookService {
     AudioService audioService;
 
     public BookResponse uploadBook(BookRequest request) {
-        log.warn("book request {}", request);
         Account account = accountService.getAccount(accountService.getAccountFromAuthentication().getId());
         request.setAccount(account);
-        Category category = categoryRepository.findById(request.getCategoryId())
+        Category category = categoryRepository.findByMainCategory(request.getCategoryName())
                         .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXIST));
         request.setCategory(category);
         Book book = bookRepository.save(bookMapper.toBook(request));

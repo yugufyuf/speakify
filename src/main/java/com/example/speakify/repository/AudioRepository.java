@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AudioRepository extends JpaRepository<Audio, String> {
+    int countByPublisher_Id(String publisherId);
 }

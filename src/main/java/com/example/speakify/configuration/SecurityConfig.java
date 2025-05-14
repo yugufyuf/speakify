@@ -33,11 +33,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        log.warn("filter");
         httpSecurity
                 .authorizeHttpRequests(requests ->
                         requests.requestMatchers(HttpMethod.POST, "/authentication", "/authentication/logout",
-                                        "/authentication/introspect", "/account","/email/send/otp").permitAll()
+                                        "/authentication/introspect", "/account","/email/send/otp",
+                                        "/otp/validation").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/audio","/email","/category","/category/",
                                         "/book","/book/","/audio", "/category/categories").permitAll()
                                 .anyRequest().authenticated());

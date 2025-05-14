@@ -1,6 +1,5 @@
 package com.example.speakify.service;
 
-import com.example.speakify.dto.response.ConvertResponse;
 import org.springframework.http.*;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,7 @@ public class CallApiService {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
 
         // Trả về phản hồi từ API
-        return response;
+        return response.getBody();
     }
 
     // Gọi API FastAPI để lấy thông tin về audio

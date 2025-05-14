@@ -44,12 +44,6 @@ public class AccountService {
                 .role(Role.USER)
                 .build();
 
-        SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
-                .emailType(EmailType.REGISTER)
-                .email(request.getEmail())
-                .build();
-        mailService.classifyBeforeSendEmail(sendEmailRequest);
-
         return accountRepository.save(account);
     }
 
